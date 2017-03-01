@@ -5,23 +5,37 @@ public class CameraController : MonoBehaviour {
 
     
     public GameObject target;
-    public GameObject ass;
+    //public GameObject ass;
     public float distance;
 	public bool isTarget;
+	public GameObject[] characters = new GameObject[2];
 
-	private float camOrthographic;
-	private Vector3 camInitPosition;
-	private bool isZoom=false;
+	float camOrthographic;
+	Vector3 camInitPosition;
+	int i=0;
+	//private bool isZoom=false;
 	
 	void Start(){
+		target = characters [i];
 		camOrthographic = Camera.main.orthographicSize;
-		camInitPosition = transform.position;
+		//camInitPosition = transform.position;
 	}
 	void Update () {
 
+		if (Input.GetKeyDown (KeyCode.Q)) {
+			characters [i].GetComponent<CharacterMovement> ().moveSpeed = 0;
+			characters [i].GetComponentInChildren<Canvas> ().sortingOrder --;
+			i++;
+			if (i > 2)
+				i = 0;
+			characters [i].GetComponentInChildren<Canvas> ().sortingOrder ++;
+			characters [i].GetComponent<CharacterMovement> ().moveSpeed = 1;
+			target = characters [i];
+		}
+
         if (IsTarget)
             transform.position = target.transform.position- new Vector3 (0,0, distance);
-		if (isZoom) {
+		/*if (isZoom) {
 			if (Camera.main.orthographicSize > 1) {
 				ZoomIn("hobo");
 			}
@@ -29,10 +43,10 @@ public class CameraController : MonoBehaviour {
 			if (Camera.main.orthographicSize < camOrthographic) {
 				ZoomOut(target);
 			} 
-		}
+		}*/
 	}
 
-    public void ZoomIn(string theTarget){
+   /* public void ZoomIn(string theTarget){
         if (theTarget == "hobo")
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position - new Vector3(0, 0, Camera.main.orthographicSize), 0.1f);
@@ -51,7 +65,7 @@ public class CameraController : MonoBehaviour {
     {
 		transform.position = Vector3.MoveTowards(transform.position,camInitPosition + new Vector3 (0, 0, camOrthographic),0.1f);
 		Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, camOrthographic + 500, Time.deltaTime * 0.7f);
-	}
+	}*/
 
     public bool IsTarget
     {
@@ -65,12 +79,12 @@ public class CameraController : MonoBehaviour {
             isTarget = value;
         }
     }
-	public bool IsZoom {
+	/*public bool IsZoom {
 		get {
 			return this.isZoom;
 		}
 		set {
 			isZoom = value;
 		}
-	}
+	}*/
 }
